@@ -1,0 +1,35 @@
+{% comment %} {% extends 'AdminPanel/base.html' %} {% endcomment %}
+
+{% block body %}
+
+<ul>
+    {% for category in hierarchy %}
+        <li>
+            <strong>{{ category.name }}</strong>
+            
+            <!-- Render resources if present -->
+            {% if category.resources %}
+                <ul>
+                    {% for resource in category.resources %}
+                        <li>
+                            {{ resource.name }}
+                            {% if resource.link %}
+                                - <a href="{{ resource.link }}" target="_blank">View</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            
+            <!-- Recursively render subcategories -->
+            {% if category.subcategories %}
+                <ul>
+                    {% include 'AdminPanel/categories.html' with hierarchy=category.subcategories %}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+
+
+{% endblock %}

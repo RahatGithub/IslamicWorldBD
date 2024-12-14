@@ -1,0 +1,23 @@
+{% extends 'AdminPanel/base.html' %}
+
+{% block body %}
+
+<div class="row row-cols-1 row-cols-md-5 g-4">
+    {% for resource in resources %}
+    <div class="col">
+      <div class="card bg-light">
+        {% if resource.image %}
+        <img src="{{ resource.image.url }}" class="card-img-top" alt="Image for {{ resource.name }}" height="450">
+        {% endif %}
+        <div class="card-body">
+          <h3 class="card-title">{{resource.name}}</h3>
+          <h5 class="card-text">{{resource.author}}</h5> 
+          <a href="{{resource.link}}" class="btn btn-outline-primary">View</a>
+          <a href="" class="btn btn-primary">Download</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
