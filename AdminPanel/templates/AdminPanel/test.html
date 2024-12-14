@@ -33,24 +33,43 @@
     </nav>
     {% endif %}
 
+    {% comment %} <div class="dropdown bg-danger">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Dropdown button
+        </button>
+        <ul class="dropdown-menu bg-warning">
+          <li><a class="dropdown-item" href="#">Action</a></li>
+          <li><a class="dropdown-item" href="#">Another action</a></li>
+          <li><a class="dropdown-item" href="#">Something else here</a></li>
+        </ul>
+      </div> {% endcomment %}
+
     <ol>
         {% for category in hierarchy %}
+        <div class="dropdown">
             <li class="mb-2">
-                <strong>{{ category.name }}</strong> 
-                <a href="/adminPanel/categories/edit?id={{category.id}}" target="_blank" class="btn btn-sm btn-warning my-1">Edit</a>
-                <a href="/adminPanel/categories/edit?id={{category.id}}" target="_blank" class="btn btn-sm btn-primary my-1">+subcategory</a>
-                <a href="/adminPanel/categories/edit?id={{category.id}}" target="_blank" class="btn btn-sm btn-info my-1">+resource</a>
-                
+                {% comment %} <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{{ category.name }}</button> <a href="/adminPanel/categories/edit?id={{category.id}}" target="_blank" class="btn btn-sm btn-warning my-1">Edit</a> {% endcomment %}
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ category.name }}
+                </button>
+                {% comment %} <ul class="dropdown-menu bg-warning">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                  </ul> {% endcomment %}
                 <!-- Render resources if present -->
                 {% if category.resources %}
-                    <ol>
+                    <ul class="dropdown-menu bg-warning">
                         {% for resource in category.resources %}
-                            <li class="text-primary">
+                            <li class="text-primary dropdown-item">
                                 <b>{{ resource.name }}</b>
                                 <a href="/adminPanel/resources/edit?id={{resource.id}}" target="_blank" class="btn btn-sm btn-warning my-1">Edit</a>
+                                <!-- {% if resource.link %}
+                                    <a href="{{ resource.link }}" target="_blank" class="btn btn-sm btn-primary">View</a>
+                                {% endif %} -->
                             </li>
                         {% endfor %}
-                    </ol>
+                    </ul>
                 {% endif %}
                 
                 <!-- Recursively render subcategories -->
@@ -60,6 +79,7 @@
                     </ol>
                 {% endif %}
             </li>
+        </div>
         {% endfor %}
     </ol>
 

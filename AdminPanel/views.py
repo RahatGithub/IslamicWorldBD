@@ -14,14 +14,16 @@ class CategoryView(View):
 
         if subcategories.exists():
             return {
+                "id": category.id,
                 "name": category.name,
                 "subcategories": [self.build_hierarchy(sub) for sub in subcategories],
             }
         else:
             resources = Resource.objects.filter(category=category, is_active=True)
             return {
+                "id": category.id,
                 "name": category.name,
-                "resources": [{"name": res.name, "link": res.link, "description": res.description} for res in resources],
+                "resources": [{"id": res.id,"name": res.name, "link": res.link, "description": res.description} for res in resources],
             }
 
     def get_hierarchy(self):
@@ -35,7 +37,7 @@ class CategoryView(View):
         # Build the hierarchy
         hierarchy = self.get_hierarchy()
         # Pass the hierarchy to the template
-        return render(request, "AdminPanel/categories.html", {"hierarchy": hierarchy})
+        return render(request, "AdminPanel/categories.html", {"hierarchy": hierarchy, "is_first_render": True})
 
     
 

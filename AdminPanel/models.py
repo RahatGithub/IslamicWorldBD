@@ -43,6 +43,7 @@ class Category(models.Model):
 
 
 class Resource(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=300)
     link = models.URLField(blank=True)
     image = models.ImageField(upload_to='resource_images/', blank=True)
