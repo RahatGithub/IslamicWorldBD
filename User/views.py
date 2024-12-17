@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from django.views import View
 from AdminPanel.models import *
 
@@ -15,16 +15,14 @@ class CategoryView(View):
 
         if category_id:
             try:
-                category = Category.objects.get(pk=category_id)
+                category = Category.objects.get(pk=category_id, is_active=True)
                 if Resource.objects.filter(category=category): # if this category has any resource
                     return redirect(f"/resources?category_id={category_id}")
                 else:  # else it has subcategories 
-                    categories = Category.objects.filter(parent_category=category)
-            except Exception:
-                raise models.exceptions.ValidationError(f"Category with ID {category_id} does not exist.")
-        # elif is_top_level:
-        #     queryset = self.queryset.filter(parent_category__isnull=True)  # Top-level categories
-        else: # if there's no 'id' or 'top-level' parameter then fetch all categories 
+                    categories = Category.objects.filter(parent_category=category, is_active=True)
+            except Category.DoesNotExist:
+                return HttpResponseNotFound("Category not found")
+        else: 
             categories = Category.objects.filter(parent_category__isnull=True)
 
         return render(request, "User/categories.html", {'categories':categories})
@@ -36,11 +34,10 @@ class ResourceView(View):
         
         if category_id:
             try:
-                category = Category.objects.get(pk=category_id)
-                resources = Resource.objects.filter(category=category)
-            except Exception:
-                raise models.exceptions.ValidationError(f"Category with ID {category_id} does not exist.") 
+                category = Category.objects.get(pk=category_id, is_active=True)
+                resources = Resource.objects.filter(category=category, is_active=True)
+            except Category.DoesNotExist:
+                return HttpResponseNotFound("Resource not found")
         else:
             resources = Resource.objects.all()
         return render(request, "User/resources.html", {'resources':resources})
-        # return HttpResponse(f"resources of the category: {category_id}")

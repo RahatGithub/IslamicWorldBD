@@ -17,7 +17,7 @@ class LoginView(View):
             if user.is_superuser:  # Ensure the user is a superadmin
                 login(request, user)  # Log the user in
                 # Redirect with the user ID and other details
-                return redirect('/adminPanel/categories/')
+                return redirect('/adminPanel/dashboard/')
             else:
                 # If the user is not a superadmin
                 return render(request, 'Authentication/login.html', {"error": "You do not have admin access."})

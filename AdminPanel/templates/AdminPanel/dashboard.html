@@ -30,25 +30,37 @@
 
      <!-- Add Master Category Button -->
      <div class="d-flex mx-3 my-2">
-        <a href="/adminPanel/add-category" class="btn btn-primary btn-block btn-lg align-self-stretch">+Master Category</a>
+        <a href="/adminPanel/category/add" class="btn btn-primary btn-block btn-lg align-self-stretch">+Master Category</a>
     </div>
     {% endif %}
 
     <ol>
         {% for category in hierarchy %}
             <li class="mb-2">
-                <strong>{{ category.name }}</strong> 
-                <a href="/adminPanel/categories/edit?id={{category.id}}" target="_blank" class="btn btn-sm btn-warning my-1">Edit</a>
-                <a href="/adminPanel/add-category/{{category.id}}" target="_blank" class="btn btn-sm btn-primary my-1">+subcategory</a>
-                <a href="/adminPanel/categories/edit?id={{category.id}}" target="_blank" class="btn btn-sm btn-info my-1">+resource</a>
+                {% if not category.is_active %}
+                <b class="text-danger">{{ category.name }}</b>
+                {% else %}
+                <b>{{ category.name }}</b> 
+                {% endif %}
+                <a href="/adminPanel/category/edit/{{category.id}}"  class="btn btn-sm btn-warning my-1">Edit</a>
+                <a href="/adminPanel/category/add/{{category.id}}"  class="btn btn-sm btn-primary my-1">+subcategory</a>
+                <a href="/adminPanel/resource/add/{{category.id}}"  class="btn btn-sm btn-info my-1">+resource</a>
                 
                 <!-- Render resources if present -->
                 {% if category.resources %}
                     <ol>
                         {% for resource in category.resources %}
-                            <li class="text-primary">
-                                <b>{{ resource.name }}</b>
-                                <a href="/adminPanel/resources/edit?id={{resource.id}}" target="_blank" class="btn btn-sm btn-warning my-1">Edit</a>
+                            <li>
+                                {% if resource.is_active %}
+                                <b class="text-success">{{ resource.name }}</b>
+                                {% else %}
+                                <b class="text-danger">{{ resource.name }}</b> 
+                                {% endif %}
+
+                                {% if resource.is_recommended %}
+                                <b class="text-warning fs-5">***</b>
+                                {% endif %}
+                                <a href="/adminPanel/resource/edit/{{resource.id}}"  class="btn btn-sm btn-warning my-1">Edit</a>
                             </li>
                         {% endfor %}
                     </ol>
