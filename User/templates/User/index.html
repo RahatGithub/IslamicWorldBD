@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock %}
+
+
+{% block body %}
+
+<div class="m-5">
+    <div class="row">
+        <!-- Main Item Section -->
+        <div class="col-md-9 bg-white p-3 border">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for category in categories %}
+                <div class="col">
+                  <div class="card h-100 bg-info text-white">
+                    {% if category.image %}
+                    <img src="{{ category.image.url }}" class="card-img-top" alt="Image for {{ category.name }}" height="350">
+                    {% endif %}
+                    <div class="card-body">
+                      <h3 class="card-title">{{category.name}}</h3>
+                      <a href="/categories?id={{category.id}}" class="btn btn-primary">View</a>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Sidebar Section -->
+        <div class="col-md-3 bg-light p-3 border">
+            <div class="overflow-auto" style="max-height: 850px;">
+                <h5 class="mb-3">Categories</h5>
+                <ul class="list-group">
+                {% for category in categories %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <!-- Display category name -->
+                    <span>{{ category.name }}</span>
+                    
+                    <!-- Link to view category -->
+                    <a href="/categories?id={{ category.id }}" class="btn btn-sm btn-outline-primary">View</a>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  {% endblock %}

@@ -5,13 +5,13 @@ from AdminPanel.models import *
 
 class Index(View):
     def get(self, request):
-        return HttpResponse("User/index.html")
+        categories = Category.objects.filter(parent_category__isnull=True, is_active=True)
+        return render(request, "User/index.html", {'categories':categories})
     
 
 class CategoryView(View):
     def get(self, request):
         category_id = request.GET.get('id')
-        # is_top_level = request.GET.get('is_top_level')
 
         if category_id:
             try:
