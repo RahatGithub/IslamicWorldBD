@@ -4,30 +4,25 @@ from django.views import View
 from AdminPanel.models import *
 
 class Index(View):
-    # def get(self, request):
-    #     categories = Category.objects.filter(parent_category__isnull=True, is_active=True)
-    #     return render(request, "User/index.html", {'categories':categories})
     def build_hierarchy(self, category):
         """
         Recursively build a hierarchical structure for a given category.
         """
-        subcategories = Category.objects.filter(parent_category=category)
+        subcategories = Category.objects.filter(parent_category=category, is_active=True)
 
         if subcategories.exists():
             return {
                 "id": category.id,
                 "name": category.name,
-                "is_active": category.is_active,
                 "subcategories": [self.build_hierarchy(sub) for sub in subcategories],
             }
         else:
-            resources = Resource.objects.filter(category=category)
+            resources = Resource.objects.filter(category=category, is_active=True)
             return {
                 "id": category.id,
                 "name": category.name,
-                "is_active": category.is_active,
                 "resources": [
-                    {"id": res.id, "name": res.name, "link": res.link, "description": res.description, "is_active": res.is_active, "is_recommended": res.is_recommended}
+                    {"id": res.id, "name": res.name, "link": res.link, "description": res.description, "is_recommended": res.is_recommended}
                     for res in resources
                 ],
             }
@@ -36,7 +31,7 @@ class Index(View):
         """
         Build the entire hierarchy starting from root categories.
         """
-        root_categories = Category.objects.filter(parent_category=None)
+        root_categories = Category.objects.filter(parent_category=None, is_active=True)
         return [self.build_hierarchy(root) for root in root_categories]
 
 
@@ -48,7 +43,7 @@ class Index(View):
         categories = Category.objects.filter(parent_category__isnull=True, is_active=True)
 
         # Pass the hierarchy to the template
-        return render(request, "User/index.html", {"categories": categories, "hierarchy": hierarchy, "is_first_render": True})
+        return render(request, "User/index.html", {"categories": categories, "hierarchy": hierarchy})
     
 
 class CategoryView(View):

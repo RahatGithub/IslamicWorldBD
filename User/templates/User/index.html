@@ -2,7 +2,6 @@
 
 {% block title %} Home {% endblock %}
 
-
 {% block body %}
 
 <div class="m-5">
@@ -12,7 +11,7 @@
             <div class="row row-cols-1 row-cols-md-3 g-4">
                 {% for category in categories %}
                 <div class="col">
-                  <div class="card h-100 bg-info text-white">
+                  <div class="card h-100 bg-secondary text-white">
                     {% if category.image %}
                     <img src="{{ category.image.url }}" class="card-img-top" alt="Image for {{ category.name }}" height="350">
                     {% endif %}
@@ -28,7 +27,6 @@
 
         <!-- Sidebar Section -->
         <div class="col-md-4 bg-light p-3 border">
-            <h5>Categories</h5>
             <ul class="list-group">
                 {% for category in hierarchy %}
                     {% include "AdminPanel/category_item.html" with category=category %}
