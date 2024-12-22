@@ -1,0 +1,39 @@
+<li class="list-group-item">
+    <div class="d-flex justify-content-between align-items-center">
+        <!-- Category Name -->
+        <span>{{ category.name }}</span>
+        <!-- Expand Button -->
+        {% if category.subcategories or category.resources %}
+            <button class="btn btn-sm btn-outline-secondary" 
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#category-{{ category.id }}" 
+                    aria-expanded="false" 
+                    aria-controls="category-{{ category.id }}">
+                <i class="bi bi-caret-down"></i>
+            </button>
+        {% endif %}
+    </div>
+
+    <!-- Subcategories and Resources -->
+    {% if category.subcategories or category.resources %}
+        <div class="collapse mt-2" id="category-{{ category.id }}">
+            <ul class="list-group">
+                {% for sub in category.subcategories %}
+                    {% include "AdminPanel/category_item.html" with category=sub %}
+                {% endfor %}
+                {% for resource in category.resources %}
+                    <li class="list-group-item">
+                        {{ resource.name }}
+                        {% if resource.is_recommended %}
+                            <span class="text-warning">(Recommended)</span>
+                        {% endif %}
+                        {% if not resource.is_active %}
+                            <span class="text-danger">(Inactive)</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</li>
