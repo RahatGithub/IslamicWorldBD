@@ -1,0 +1,72 @@
+{% block css %}
+
+<style>
+    /* Hover effect for list-group-item */
+    .list-group-item:hover {
+        background-color: #f8f9fa; /* Light gray */
+        cursor: pointer;
+    }
+    
+    /* Optional: Style links inside list items */
+    .list-group-item a {
+        text-decoration: none;
+    }
+    
+    .list-group-item a:hover {
+        text-decoration: underline; /* Underline links on hover */
+    }
+</style>
+
+{% endblock %}
+
+
+
+{% for category in hierarchy %}
+<li class="list-group-item">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+        {% if not category.is_active %}
+            <b class="text-danger">{{ category.name }}</b>
+        {% else %}
+            <b>{{ category.name }}</b>
+        {% endif %}
+        {% if category.subcategories or category.resources %}
+            <button class="btn btn-sm btn-outline-secondary" 
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#category-{{ category.id }}" 
+                    aria-expanded="false" 
+                    aria-controls="category-{{ category.id }}">
+                <i class="bi bi-caret-down toggle-icon"></i>
+            </button>
+        {% endif %}
+    </div>
+    <div>
+      <a href="/adminPanel/category/edit/{{ category.id }}" class="btn btn-sm btn-outline-primary mx-1"><i class="bi bi-pencil-fill"></i></a>
+      <a href="/adminPanel/category/add/{{ category.id }}" class="btn btn-sm btn-outline-primary mx-1"><i class="bi bi-list-nested"></i><i class="bi bi-plus"></i></a>
+      <a href="/adminPanel/resource/add/{{ category.id }}" class="btn btn-sm btn-outline-primary mx-1"><i class="bi bi-suit-heart-fill"></i><i class="bi bi-plus"></i></a>
+    </div>
+  </div>
+
+  {% if category.subcategories or category.resources %}
+  <div class="collapse mt-2" id="category-{{ category.id }}">
+    <ul class="list-group">
+      {% for resource in category.resources %}
+      <li class="list-group-item">
+        {% if resource.is_active %}
+        <b class="text-success">{{ resource.name }}</b>
+        {% else %}
+        <b class="text-danger">{{ resource.name }}</b>
+        {% endif %}
+        {% if resource.is_recommended %}
+        <b class="text-warning fs-5">***</b>
+        {% endif %}
+        <a href="/adminPanel/resource/edit/{{ resource.id }}" class="btn btn-sm btn-outline-primary m-1"><i class="bi bi-pencil-fill"></i></a>
+      </li>
+      {% endfor %}
+      {% include 'AdminPanel/category_dropdown.html' with hierarchy=category.subcategories %}
+    </ul>
+  </div>
+  {% endif %}
+</li>
+{% endfor %}
